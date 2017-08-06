@@ -6,7 +6,7 @@
 
 **项目地址**: [点我查看](http://spezz07.info/vue/Vue-CN-Node/)
 
-**问题记录**: [点我查看](http://spezz07.info/2017/08/06/记录下在写vue-cn-node时碰到的问题/)
+**问题记录**: [点我查看](http://spezz07.info/2017/08/07/记录下在写vue-cn-node时碰到的问题/)
 
 ## 技术栈
 ```
