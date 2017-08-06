@@ -1,0 +1,19 @@
+.lineclass{
+  background-color: #2196f3;
+}
+.labelclass{
+  color: #324057;
+  font-size: 18px;
+}
+.textclass{
+  color: #2196f3;
+  font-size: 20px;
+}
+.activeline{
+  width: 100%;
+  height: 4px;
+  border-radius: 50px;
+  margin-bottom: 2px;
+  background-color: #ffffff;
+}
+input,button,select,textarea{outline:none}
