@@ -21,9 +21,10 @@ Axios, Vue-Axios //官方推荐的http请求模块
 Muse-ui //UI框架
 Monent.js //时间格式化
 Sass //Css预编译器
+
 ```
 
-##项目结构
+## 项目结构
 ```
 │  index.html  
 │  package.json
