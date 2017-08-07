@@ -37,17 +37,17 @@ export default {
   .view {
     position: absolute;
     width:100%;
-    transition: all 0.42s cubic-bezier(.42, 0, .58, 1);
+    transition: all 0.35s cubic-bezier(.42, 0, .58, 1);
   }
   .slide-left-enter, .slide-right-leave-active {
     opacity: 0;
-    -webkit-transform: translateY(500px);
-    transform: translateY(500px);
+    -webkit-transform: translateX(500px);
+    transform: translateX(500px);
   }
   .slide-left-leave-active, .slide-right-enter {
     opacity: 0;
-    -webkit-transform: translateY(-500px);
-    transform: translateY(-500px);
+    -webkit-transform: translateX(-500px);
+    transform: translateX(-500px);
   }
   .lineclass{
     background-color: #2196f3;
