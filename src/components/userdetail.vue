@@ -54,7 +54,7 @@ export default {
   },
   methods: {
     routerback () {
-      this.$router.back(-1)
+      this.$router.goBack()
     },
     torecent (p) {
       this.$router.push(

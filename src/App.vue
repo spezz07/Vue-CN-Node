@@ -1,9 +1,10 @@
 <template>
   <div id="app">
-    <keep-alive>
-      <router-view>
-      </router-view>
-    </keep-alive>
+    <transition :name="transitionName">
+      <keep-alive>
+        <router-view class="view"></router-view>
+      </keep-alive>
+    </transition>
   </div>
 </template>
 <script>
@@ -15,7 +16,7 @@ export default {
       transitionName: ''
     }
   },
-  /*  watch: {
+  watch: {
     '$route' (to, from) {
       let isBack = this.$router.isBack
       if (isBack) {
@@ -24,12 +25,8 @@ export default {
         this.transitionName = 'slide-left'
       }
       this.$router.isBack = false
-    }    <transition :name="transitionName">
-        <keep-alive>
-      <router-view class="view"></router-view>
-        </keep-alive>
-      </transition>
-  }, */
+    }
+  },
   components: {
     notice,
     slide
@@ -37,21 +34,20 @@ export default {
 }
 </script>
 <style>
-  @import "./assets/style.css";
   .view {
     position: absolute;
     width:100%;
-    transition: all .8s cubic-bezier(.55,0,.1,1);
+    transition: all 0.42s cubic-bezier(.42, 0, .58, 1);
   }
   .slide-left-enter, .slide-right-leave-active {
     opacity: 0;
-    -webkit-transform: translate(50px, 0);
-    transform: translate(50px, 0);
+    -webkit-transform: translateY(500px);
+    transform: translateY(500px);
   }
   .slide-left-leave-active, .slide-right-enter {
     opacity: 0;
-    -webkit-transform: translate(-50px, 0);
-    transform: translate(-50px, 0);
+    -webkit-transform: translateY(-500px);
+    transform: translateY(-500px);
   }
   .lineclass{
     background-color: #2196f3;

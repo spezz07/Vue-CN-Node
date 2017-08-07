@@ -111,7 +111,7 @@ export default {
   },
   methods: {
     routerback () {
-      this.$router.back(-1)
+      this.$router.goBack()
     },
     replyat (id, name) {
       if (id === 0 && name === 0) {
@@ -191,6 +191,13 @@ export default {
       'isLogin',
       'isCollection'
     ])
+  },
+  beforeRouteEnter (to, from, next) {
+    next((vm) => {
+      if (vm.loadmoredata) {
+        alert('111')
+      }
+    })
   },
   components: {
     loading

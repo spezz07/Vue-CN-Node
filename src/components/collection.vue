@@ -43,7 +43,7 @@ export default {
   },
   methods: {
     routerback () {
-      this.$router.back(-1)
+      this.$router.goBack()
     },
     toPost (postId) {
       this.$router.push({name: 'post', params: {postid: postId}}) // 跳转到具体帖子页

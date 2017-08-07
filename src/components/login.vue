@@ -28,7 +28,7 @@ export default {
       }
     },
     routerback () {
-      this.$router.back(-1)
+      this.$router.goBack()
     }
   },
   computed: {

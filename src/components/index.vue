@@ -2,6 +2,7 @@
   <div>
     <slide @slideopen="handleslideshow" :slidestatus="slideshow"></slide>
     <loading v-show="loadingIndexStatus"></loading>
+
     <mu-back-top :height="300" :bottom="30" :right="10" :duration="1000" >
       <mu-float-button icon="publish" mini   style="background-color: #2196f3"/>
     </mu-back-top>
@@ -18,6 +19,7 @@
     <mu-tab value="job"  title="招聘"/>
     <mu-tab value="dev"  title="客户端"/>
     </mu-tabs>
+
   </div>
      <div class="content" >
        <div class="content-list" v-for="i in  indexData">
@@ -102,7 +104,11 @@ export default {
       }
     },
     loadmoredata () {
-      if (!this.loadingmoreStatus && document.documentElement.offsetHeight - window.pageYOffset <= window.screen.height) { // 判断是否滚动到底部，并且没在载入状态下才进行请求数据
+      // console.info('文档高度：' + document.querySelector('.content').offsetHeight)
+      // console.info('滚动高度：' + pageYOffset)
+      // console.info('相减：' + (document.querySelector('.content').offsetHeight - window.pageYOffset))
+      // console.info('页面高度:' + window.screen.height)
+      if (!this.loadingmoreStatus && document.querySelector('.content').offsetHeight - window.pageYOffset <= window.screen.height) { // 判断是否滚动到底部，并且没在载入状态下才进行请求数据
         this.page++
         this.$store.dispatch('loadingMoreIndex')
         this.$store.dispatch({
