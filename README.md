@@ -15,7 +15,7 @@
 ## 技术栈
 ```
 Vue2.0 //构建项目
-Vue-Router //用于出来项目中的路由跳转
+Vue-Router //用于处理项目中的路由跳转
 Vuex //官方提供的状态管理模式
 Axios, Vue-Axios //官方推荐的http请求模块
 Muse-ui //UI框架
@@ -67,7 +67,9 @@ Sass //Css预编译器
 │  │      recent-content.vue                                  // 用户最近回复，主题页面
 │  │      slide.vue                                           // 侧边栏
 │  │      userdetail.vue                                      // 用户详情页
-│  │      
+│  │      message.vue                                         // 我的消息
+│  │  
+│  │  
 │  ├─router
 │  │      index.js                                            // 路由设置
 │  │      
@@ -86,6 +88,9 @@ Sass //Css预编译器
 │              postcontent.js                                 // 帖子内容页
 │              userdetail-mutation-types.js
 │              userdetail.js                                  // 用户详情页
+│              message-mutation-types.js                    
+│              message.js                                    // 获取我的已读和未读消息
+│
 │              
 └─static
     │  .gitkeep
@@ -100,8 +105,9 @@ Sass //Css预编译器
             MaterialIcons-Regular.woff
             MaterialIcons-Regular.woff2     
 ```
+
 ## 功能实现情况
-### 根据所提供的Api 完成了以下功能
+#### 根据所提供的Api 完成了以下功能
  - [x] 首页
  - [x] 无限懒加载文章列表
  - [x] 根据tab切换首页内容
@@ -114,7 +120,8 @@ Sass //Css预编译器
  - [x] 登陆后，可以回复某人评论
  - [x] 登陆后，可以发布新主题
  - [x] 页面切换时的动态效果
- - [ ] 消息设置已读功能
+ - [x] 查看我的消息
+ - [x] 设置单个消息或者全部消息为已读取状态
  - [ ] 对自己的文章可以进行编辑更新
  - [ ] 相关操作成功或失败后的消息提醒(现在的话只是用了浏览器的自带的alert,后续会添加提示功能)
 
