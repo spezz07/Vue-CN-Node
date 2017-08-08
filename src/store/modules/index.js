@@ -9,13 +9,15 @@ const state = {
   indexdata: [],
   loadingstatus: true,
   loadingmorestatus: false,
-  leavepagey: null
+  leavepagey: '',
+  noreadnum: 0
 }
 const getters = {
   indexData: (state) => state.indexdata,
   loadingIndexStatus: (state) => state.loadingstatus,
   loadingmoreStatus: (state) => state.loadingmorestatus,
-  leavePagey: (state) => state.leavepagey
+  leavePagey: (state) => state.leavepagey,
+  noReadNum: (state) => String(state.noreadnum)
 }
 const mutations = {
   [types.GET_INDEX_DATA] (state, val) {
@@ -32,6 +34,9 @@ const mutations = {
   },
   [types.LEAVE_PAGEY] (state, val) {
     state.leavepagey = val
+  },
+  [types.NOREADNUM] (state, val) {
+    state.noreadnum = val
   },
   [types.LOADING_INDEX_CHANGE] (state, val) { // 切换页面loading显示
     state.loadingstatus = true
@@ -65,6 +70,14 @@ const actions = {
   },
   setPagey ({ commit }, val) {
     commit(types.LEAVE_PAGEY, val)
+  },
+  getNoReadNum: function ({commit}, val) {
+    axios.get(`https://cnodejs.org/api/v1/message/count/?accesstoken=${val.token}`)
+      .then((res) => {
+        commit(types.NOREADNUM, res.data.data)
+      }).catch((err) => {
+        alert(err.response.data['error_msg'])
+      })
   },
   loadingIndex ({ commit }, val) { // 切换页面loading显示
     commit(types.LOADING_INDEX_CHANGE, val)

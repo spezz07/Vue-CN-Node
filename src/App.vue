@@ -68,5 +68,9 @@ export default {
     background-color: #ffffff;
   }
   input,button,select,textarea{outline:none}
-
+  .mu-badge-circle{
+    width: 18px!important;
+    height: 18px!important;
+    top: -6px;
+  }
 </style>

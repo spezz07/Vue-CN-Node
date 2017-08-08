@@ -24,7 +24,7 @@
           <mu-icon value="star_border" :size="22" class="item-collections" v-else @click="postcollection"/>
         </div>
         <div class="item-info">
-          <img :src="postData['author']['avatar_url']" alt="" @click="touserinfo(postData['author']['loginname'])">
+          <img :src="postData['author']['avatar_url']" alt="" @click="toUserInfo(postData['author']['loginname'])">
           <div class="item-info-left">
             <span class="item-info-author">{{postData['author']['loginname']}}</span>
             <div class="item-info-tips">
@@ -48,7 +48,7 @@
        <div class="post-content" v-for=" (i,index) in postData.replies">
        <div class="content-item">
         <div class="item-info">
-          <img :src="i.author['avatar_url']" alt="" @click="touserinfo(i['author']['loginname'])">
+          <img :src="i.author['avatar_url']" alt="" @click="toUserInfo(i['author']['loginname'])">
           <div class="item-info-left">
             <span class="item-info-author">{{i.author['loginname']}}
                <div class="item-info-tips">
@@ -177,8 +177,7 @@ export default {
         alert('请登录后再点赞')
       }
     },
-    touserinfo (name) {
-      console.log(name)
+    toUserInfo (name) {
       this.$router.push({name: 'userdetail', params: {username: name}})
     }
   },

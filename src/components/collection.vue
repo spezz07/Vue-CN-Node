@@ -121,10 +121,7 @@ export default {
   }
 .no-content {
   text-align: center;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  margin: calc( (100vh - 180px)/2 ) auto 0 auto;
 }
 
 </style>

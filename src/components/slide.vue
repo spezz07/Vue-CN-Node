@@ -22,7 +22,7 @@
         </div>
       </div>
       <mu-list @itemClick="slideopen(1)">
-        <mu-list-item title="用户信息" @click="touserinfo">
+        <mu-list-item title="用户信息" @click="toUserInfo">
           <mu-icon slot="left" value="account_box" color="blue500"  />
         </mu-list-item>
         <mu-list-item title="我的收藏" @click="tocollection">
@@ -67,7 +67,7 @@ export default {
         this.$router.push('/collection')
       }, 100)
     },
-    touserinfo () {
+    toUserInfo () {
       if (this.isLogin) {
         setTimeout(() => {
           this.$router.push({name: 'userdetail', params: {username: this.userName}})

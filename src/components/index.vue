@@ -2,13 +2,15 @@
   <div>
     <slide @slideopen="handleslideshow" :slidestatus="slideshow"></slide>
     <loading v-show="loadingIndexStatus"></loading>
-
     <mu-back-top :height="300" :bottom="30" :right="10" :duration="1000" >
-      <mu-float-button icon="publish" mini   style="background-color: #2196f3"/>
+      <mu-float-button icon="publish" mini  style="background-color: #2196f3"/>
     </mu-back-top>
      <div class="head" >
     <mu-appbar title="CN-Node社区">
        <mu-icon-button icon="menu" slot="left"  @click="handleslideshow"/>
+        <mu-badge :content="noReadNum" class="icon-badge" circle secondary slot="right" >
+        <mu-icon value="notifications" @click="toMyMessage"/>
+      </mu-badge>
       <mu-icon-button icon="edit_mode" slot="right"  @click="toNewPost"/>
     </mu-appbar>
     <mu-tabs :value="activetab" @change="handleTabChange" lineClass="activeline" :zDepth = 8 >
@@ -19,7 +21,6 @@
     <mu-tab value="job"  title="招聘"/>
     <mu-tab value="dev"  title="客户端"/>
     </mu-tabs>
-
   </div>
      <div class="content" >
        <div class="content-list" v-for="i in  indexData">
@@ -70,6 +71,9 @@ export default {
       activeTab: this.activetab,
       val: []
     })
+    if (this.isLogin) {
+      this.$store.dispatch('getNoReadNum', { token: this.userToken })
+    }
   },
   data () {
     return {
@@ -103,6 +107,9 @@ export default {
         alert('请登录后再进行新建帖子操作')
       }
     },
+    toMyMessage () {
+      this.$router.push(`/mymessage`)
+    },
     loadmoredata () {
       // console.info('文档高度：' + document.querySelector('.content').offsetHeight)
       // console.info('滚动高度：' + pageYOffset)
@@ -126,7 +133,9 @@ export default {
       'loadingIndexStatus', // getters 映射到this.indexData注意命名不能冲突
       'loadingmoreStatus',
       'leavePagey',
-      'isLogin'
+      'isLogin',
+      'userToken',
+      'noReadNum'
     ])
   },
   beforeRouteEnter (to, from, next) {
@@ -135,6 +144,9 @@ export default {
     }
     next((vm) => {
       window.scrollTo(0, vm.leavePagey)
+      if (vm.isLogin) {
+        vm.$store.dispatch('getNoReadNum', { token: vm.userToken })
+      }
       setTimeout(() => {
         window.addEventListener('scroll', vm.loadmoredata)
       }, 100)
@@ -173,6 +185,14 @@ export default {
     position: fixed;
     left: 0;
     top: 0;
+  }
+  .icon-badge {
+    width: 20px;
+    height: 20px;
+  }
+  .mu-badge-circle{
+    width: 20px!important;
+    height: 20px!important;
   }
   .content{
     margin-top: 104px;

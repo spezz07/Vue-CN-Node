@@ -6,6 +6,7 @@ import login from './modules/login'
 import newpost from './modules/newpost'
 import collection from './modules/collection'
 import userdetail from './modules/userdetail'
+import message from './modules/message'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -15,6 +16,7 @@ export default new Vuex.Store({
     login,
     newpost,
     collection,
-    userdetail
+    userdetail,
+    message
   }
 })

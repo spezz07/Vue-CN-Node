@@ -1,0 +1,2 @@
+export const GET_MY_MESSAGE = 'GET_MY_MESSAGE '
+export const GET_MESSAGE_COUNT = 'GET_MESSAGE_COUNT'

@@ -7,6 +7,7 @@ import newpost from '../components/newpost.vue'
 import collection from '../components/collection.vue'
 import userdetail from '../components/userdetail.vue'
 import recent from '../components/recent-content.vue'
+import message from '../components/message.vue'
 Vue.use(Router)
 Router.prototype.goBack = function () {
   this.isBack = true
@@ -55,6 +56,11 @@ export default new Router({
       path: '/userdetail/:username/recent',
       name: 'recent',
       component: recent
+    },
+    {
+      path: '/mymessage',
+      name: 'message',
+      component: message
     }
   ]
 })
