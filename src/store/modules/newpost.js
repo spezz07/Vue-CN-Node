@@ -11,9 +11,9 @@ const mutations = {}
 const actions = {
   createNewPost: function ({commit}, val) {
     axios.post('https://cnodejs.org/api/v1/topics', {
-      accesstoken: 'val.token', // val.token
+      accesstoken: val.token, // val.token
       title: val.title,
-      tab: 'val.tab', // val.tab
+      tab: val.tab, // val.tab
       content: val.content
     }).then((res) => {
       alert('发帖成功,3s后将跳转到帖子')
