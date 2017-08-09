@@ -10,6 +10,14 @@
 
 **问题记录**: [点我查看](http://spezz07.info/2017/08/07/记录下在写vue-cn-node时碰到的问题/)
 
+## 截图
+![1](http://wx4.sinaimg.cn/large/005BYIHNgy1fidapijxm5j30ae0ifgn0.jpg)
+
+![2](http://wx3.sinaimg.cn/large/005BYIHNgy1fidapissxdj30ab0ihdh9.jpg)
+
+![3](http://wx4.sinaimg.cn/large/005BYIHNgy1fidapiv8w8j30aa0iiq3j.jpg)
+
+![4](http://wx1.sinaimg.cn/large/005BYIHNgy1fidapj4e4lj30ac0ik74p.jpg)
 
 
 ## 技术栈
