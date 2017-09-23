@@ -37,7 +37,12 @@
               <mu-icon value="reply" color="grey800" :size="16"/>&nbsp&nbsp{{postData['reply_count']}}
              </span>
             <span class="item-info-visit"> <mu-icon value="visibility" color="grey800" :size="16"/>
-              &nbsp&nbsp{{postData['visit_count']}}</span>
+              &nbsp&nbsp{{postData['visit_count']}}
+              </span>
+              <span style="fontSize: 14px" v-if="postData['author_id'] === this.userId" @click="toEditPost(postData.id)">
+                <mu-icon value="border_color" color="grey800" :size="14"/>
+                &nbsp&nbsp编辑帖子
+                </span>
           </div>
         </div>
         <mu-divider/>
@@ -45,7 +50,7 @@
         </div>
       </div>
     </div>
-       <div class="post-content" v-for=" (i,index) in postData.replies">
+       <div class="post-content" v-for=" (i,index) in postData.replies" :key="index">
        <div class="content-item">
         <div class="item-info">
           <img :src="i.author['avatar_url']" alt="" @click="toUserInfo(i['author']['loginname'])">
@@ -179,6 +184,9 @@ export default {
     },
     toUserInfo (name) {
       this.$router.push({name: 'userdetail', params: {username: name}})
+    },
+    toEditPost (postid) {
+      this.$router.push({name: 'editpost', params: {username: postid}})
     }
   },
   computed: {
@@ -193,9 +201,6 @@ export default {
   },
   beforeRouteEnter (to, from, next) {
     next((vm) => {
-      if (vm.loadmoredata) {
-        alert('111')
-      }
     })
   },
   components: {

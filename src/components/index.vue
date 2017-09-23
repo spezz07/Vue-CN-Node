@@ -23,7 +23,7 @@
     </mu-tabs>
   </div>
      <div class="content" >
-       <div class="content-list" v-for="i in  indexData">
+       <div class="content-list" v-for="(i,index) in  indexData" :key='index'></div>
          <div class="content-list-item">
           <div class="avatar">
             <img :src='i.author.avatar_url' />

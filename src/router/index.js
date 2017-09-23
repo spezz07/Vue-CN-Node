@@ -8,6 +8,7 @@ import collection from '../components/collection.vue'
 import userdetail from '../components/userdetail.vue'
 import recent from '../components/recent-content.vue'
 import message from '../components/message.vue'
+import editpost from '../components/editpost.vue'
 Vue.use(Router)
 Router.prototype.goBack = function () {
   this.isBack = true
@@ -61,6 +62,11 @@ export default new Router({
       path: '/mymessage',
       name: 'message',
       component: message
+    },
+    {
+      path: '/post/:postid/edit',
+      name: 'editpost',
+      component: editpost
     }
   ]
 })

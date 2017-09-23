@@ -23,6 +23,22 @@ const actions = {
     }).catch((err) => {
       alert(err.response.data['error_msg'])
     })
+  },
+  editMyPost: ({commit}, val) => {
+    axios.post('https://cnodejs.org/api/v1/topics/update', {
+      accesstoken: val.token, // val.token
+      title: val.title,
+      topic_id: val.postid,
+      tab: val.tab, // val.tab
+      content: val.content
+    }).then((res) => {
+      alert('帖子修改成功,3s后将跳转到帖子')
+      setTimeout(function () {
+        router.push({name: 'post', params: {postid: res.data.topic_id}})
+      }, 3000)
+    }).catch((err) => {
+      alert(err.response.data['error_msg'])
+    })
   }
 }
 export default {
