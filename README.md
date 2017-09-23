@@ -10,6 +10,14 @@
 
 **问题记录**: [点我查看](http://spezz07.info/2017/08/07/记录下在写vue-cn-node时碰到的问题/)
 
+## 截图
+![1](https://raw.githubusercontent.com/spezz07/Vue-CN-Node/master/screenshot/1.png)
+
+![2](https://raw.githubusercontent.com/spezz07/Vue-CN-Node/master/screenshot/2.png)
+
+![3](https://raw.githubusercontent.com/spezz07/Vue-CN-Node/master/screenshot/3.png)
+
+![4](https://raw.githubusercontent.com/spezz07/Vue-CN-Node/master/screenshot/4.png)
 
 
 ## 技术栈
