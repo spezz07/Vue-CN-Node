@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="newpost-head" >
-      <mu-appbar title="新建主题">
+      <mu-appbar title="编辑帖子">
        <mu-icon-button icon="arrow_back" slot="left"  @click="routerback" />
     </mu-appbar>
   </div>
@@ -32,10 +32,7 @@ export default {
       list: ['问答', '分享', '求职', '客户端'],
       posttitle: '',
       posttab: '',
-      postcontent: '',
-      editorOption: {
-        // some quill options
-      }
+      postcontent: ''
     }
   },
   deactivated () {
