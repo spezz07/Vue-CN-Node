@@ -73,76 +73,73 @@
     </div>
   </div>
 </template>
-<script>
-import { mapGetters } from 'vuex'
-export default {
-  data () {
-    return {
-      dialog: false,
-      dialogtext: ''
-    }
-  },
-  created () {
-    if (this.isLogin) {
-      this.$store.dispatch('getMyMessage', {
-        token: this.userToken
-      })
-    }
-  },
-  methods: {
-    open () {
-      this.dialog = true
-      this.noReadCount !== 0 ? this.dialogtext = '确定要把全部未读信息标记为已读吗?' : this.dialogtext = '无未读信息'
-    },
-    close (reason) {
-      if (this.noReadCount === 0) {
-        this.dialogtext = '无未读信息'
-        this.dialog = false
-      } else {
-        if (reason === '2') {
-          this.$store.dispatch('postMarkAll', {
-            token: this.userToken
-          })
-          this.dialogtext = '设置成功'
-          setTimeout(() => {
-            this.dialog = false
-          }, 1500)
-        } else {
-          this.dialog = false
-        }
-      }
-    },
-    routerback () {
-      this.$router.goBack()
-    },
-    toPost (postId, msgid, isread) {
-      if (!isread) {
-        this.$store.dispatch(' postMarkOne', {
-          token: this.userToken,
-          msgid: msgid
-        })
-      }
-      this.$router.push({name: 'post', params: {postid: postId}}) // 跳转到具体帖子页
-    },
-    toUserInfo (name) {
-      this.$router.push({name: 'userdetail', params: {username: name}})
-    }
-  },
-  computed: {
-    ...mapGetters([
-      'isLogin',
-      'userToken',
-      'noReadData',
-      'readData',
-      'readCount',
-      'noReadCount'
-    ])
-  },
-  beforeRouteEnter (to, from, next) {
-    next((vm) => {
+<script setup>
+import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
+
+const router = useRouter()
+const store = useStore()
+
+const dialog = ref(false)
+const dialogtext = ref('')
+
+const isLogin = computed(() => store.getters.isLogin)
+const userToken = computed(() => store.getters.userToken)
+const noReadData = computed(() => store.getters.noReadData)
+const readData = computed(() => store.getters.readData)
+const readCount = computed(() => store.getters.readCount)
+const noReadCount = computed(() => store.getters.noReadCount)
+
+onMounted(() => {
+  if (isLogin.value) {
+    store.dispatch('getMyMessage', {
+      token: userToken.value
     })
-  },
-  components: {}
+  }
+})
+
+const open = () => {
+  dialog.value = true
+  noReadCount.value !== 0 ? dialogtext.value = '确定要把全部未读信息标记为已读吗?' : dialogtext.value = '无未读信息'
+}
+
+const close = (reason) => {
+  if (noReadCount.value === 0) {
+    dialogtext.value = '无未读信息'
+    dialog.value = false
+  } else {
+    if (reason === '2') {
+      store.dispatch('postMarkAll', {
+        token: userToken.value
+      })
+      dialogtext.value = '设置成功'
+      setTimeout(() => {
+        dialog.value = false
+      }, 1500)
+    } else {
+      dialog.value = false
+    }
+  }
+}
+
+const routerback = () => {
+  // Vue Router 4 doesn't have goBack method, using router.go()
+  router.go(-1)
+}
+
+const toPost = (postId, msgid, isread) => {
+  if (!isread) {
+    store.dispatch('postMarkOne', {
+      token: userToken.value,
+      msgid: msgid
+    })
+  }
+  router.push({name: 'post', params: {postid: postId}}) // 跳转到具体帖子页
+}
+
+const toUserInfo = (name) => {
+  router.push({name: 'userdetail', params: {username: name}})
 }
 </script>
 <style lang="scss" rel="stylesheet/scss" scoped >

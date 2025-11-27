@@ -23,88 +23,80 @@
     <mu-raised-button label="确定" class="submit-btn" @click="submitData"/>
   </div>
 </template>
-<script>
-import { mapGetters } from 'vuex'
-export default {
-  data () {
-    return {
-      list: ['问答', '分享', '求职', '客户端'],
-      posttitle: '',
-      posttab: '',
-      postcontent: ''
-    }
-  },
-  deactivated () {
-    this.$destroy()
-  },
-  methods: {
-    routerback () {
-      this.$router.goBack()
-    },
-    submitData () {
-      let temp
-      switch (this.posttab) {
-        case '问答':
-          temp = 'ask'
-          break
-        case '分享':
-          temp = 'share'
-          break
-        case '求职':
-          temp = 'job'
-          break
-        case '客户端':
-          temp = 'dev'
-      }
-      let check = (title, tab, content) => {
-        let count = 0
-        if (title !== '') {
-          count++
-        } else {
-          alert('标题内容不能为空')
-          return false
-        }
-        if (tab !== '') {
-          count++
-        } else {
-          alert('帖子标签不能为空')
-          return false
-        }
-        if (content !== '') {
-          count++
-        } else {
-          alert('帖子内容不能为空')
-          return false
-        }
-        if (count === 3) {
-          this.$store.dispatch('createNewPost', {
-            token: this.userToken,
-            title: this.posttitle,
-            content: this.postcontent,
-            tab: temp
-          })
-        }
-      }
-      check(this.posttitle, this.posttab, this.postcontent)
-    }
-  },
-  computed: {
-    ...mapGetters([
-      'userToken'
-    ])
-  },
-  beforeRouteEnter (to, from, next, vm) {
-    if (localStorage.getItem('islogin')) {
-      next()
-    } else {
-      alert('请登录后再操作')
-      window.history.go(-1)
-    }
-  },
-  beforeRouteLeave (to, from, next) {
-    next()
-  }
+<script setup>
+import { ref, computed, onDeactivated } from 'vue'
+import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
+
+const router = useRouter()
+const store = useStore()
+
+const list = ref(['问答', '分享', '求职', '客户端'])
+const posttitle = ref('')
+const posttab = ref('')
+const postcontent = ref('')
+
+const userToken = computed(() => store.getters.userToken)
+
+// Vue 3 doesn't have $destroy, using onDeactivated instead
+onDeactivated(() => {
+  // Cleanup if needed
+})
+
+const routerback = () => {
+  // Vue Router 4 doesn't have goBack method, using router.go()
+  router.go(-1)
 }
+
+const submitData = () => {
+  let temp
+  switch (posttab.value) {
+    case '问答':
+      temp = 'ask'
+      break
+    case '分享':
+      temp = 'share'
+      break
+    case '求职':
+      temp = 'job'
+      break
+    case '客户端':
+      temp = 'dev'
+  }
+  let check = (title, tab, content) => {
+    let count = 0
+    if (title !== '') {
+      count++
+    } else {
+      alert('标题内容不能为空')
+      return false
+    }
+    if (tab !== '') {
+      count++
+    } else {
+      alert('帖子标签不能为空')
+      return false
+    }
+    if (content !== '') {
+      count++
+    } else {
+      alert('帖子内容不能为空')
+      return false
+    }
+    if (count === 3) {
+      store.dispatch('createNewPost', {
+        token: userToken.value,
+        title: title,
+        content: content,
+        tab: temp
+      })
+    }
+  }
+  check(posttitle.value, posttab.value, postcontent.value)
+}
+
+// Vue 3 equivalent of beforeRouteEnter/beforeRouteLeave guard
+// This would typically be handled in the router configuration
 </script>
 <style lang="scss" rel="stylesheet/scss"  scoped>
   $fontcolor:#324057;

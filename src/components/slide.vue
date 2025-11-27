@@ -38,55 +38,57 @@
     </mu-drawer>
   </div>
 </template>
-<script>
-import { mapGetters } from 'vuex'
-export default {
-  name: 'slidebar',
-  data () {
-    return {
-      open: true,
-      docked: false,
-      loginName: ''
-    }
-  },
-  created () {},
-  props: ['slidestatus'],
-  methods: {
-    slideopen (n) {
-      setTimeout(() => {
-        this.open = !this.open
-        this.docked = !n
-        this.$emit('slideopen')
-      }, 0)
-    },
-    loginout () {
-      this.$store.dispatch('userLoginout')
-    },
-    tocollection () {
-      setTimeout(() => {
-        this.$router.push('/collection')
-      }, 100)
-    },
-    toUserInfo () {
-      if (this.isLogin) {
-        setTimeout(() => {
-          this.$router.push({name: 'userdetail', params: {username: this.userName}})
-        }, 100)
-      } else {
-        setTimeout(() => {
-          this.$router.push({name: 'userdetail', params: {username: 'defult'}})
-        }, 100)
-      }
-    }
-  },
-  computed: {
-    ...mapGetters([
-      'userName',
-      'isLogin',
-      'userAvatar'
-    ])
-  },
-  components: {}
+<script setup>
+import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
+
+const router = useRouter()
+const store = useStore()
+
+const open = ref(true)
+const docked = ref(false)
+const loginName = ref('')
+
+const userName = computed(() => store.getters.userName)
+const isLogin = computed(() => store.getters.isLogin)
+const userAvatar = computed(() => store.getters.userAvatar)
+
+// Define props in setup
+const props = defineProps(['slidestatus'])
+// Define emits
+const emit = defineEmits(['slideopen'])
+
+onMounted(() => {})
+
+const slideopen = (n) => {
+  setTimeout(() => {
+    open.value = !open.value
+    docked.value = !n
+    emit('slideopen')
+  }, 0)
+}
+
+const loginout = () => {
+  store.dispatch('userLoginout')
+}
+
+const tocollection = () => {
+  setTimeout(() => {
+    router.push('/collection')
+  }, 100)
+}
+
+const toUserInfo = () => {
+  if (isLogin.value) {
+    setTimeout(() => {
+      router.push({name: 'userdetail', params: {username: userName.value}})
+    }, 100)
+  } else {
+    setTimeout(() => {
+      router.push({name: 'userdetail', params: {username: 'defult'}})
+    }, 100)
+  }
 }
 </script>
 <style lang="scss" rel="stylesheet/scss"  scoped>

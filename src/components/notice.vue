@@ -4,12 +4,8 @@
     <h3>sdedfaefdasfdasfdafas.</h3>
    </div>
 </template>
-<script>
-export default {
-  data () {
-    return {}
-  }
-}
+<script setup>
+// This component doesn't have any logic, just a loading display
 </script>
 <style lang="scss" rel="stylesheet/scss">
 .mask{

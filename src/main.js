@@ -1,24 +1,17 @@
-import Vue from 'vue'
-import App from './App'
+import { createApp } from 'vue'
+import App from './App.vue'
 import router from './router'
-import vuex from 'vuex'
-import muse from 'muse-ui'
 import store from './store/store.js'
-import 'muse-ui/dist/muse-ui.css'
-import 'muse-ui/dist/theme-carbon.css'
+import ElementPlus from 'element-plus'
+import 'element-plus/dist/index.css'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 
-Vue.use(VueAxios, axios)
-Vue.use(vuex)
-Vue.use(muse)
-Vue.config.productionTip = false
+const app = createApp(App)
 
-/* eslint-disable no-new */
-new Vue({
-  el: '#app',
-  router,
-  store,
-  template: '<App/>',
-  components: { App }
-})
+app.use(store)
+app.use(router)
+app.use(ElementPlus)
+app.use(VueAxios, axios)
+
+app.mount('#app')

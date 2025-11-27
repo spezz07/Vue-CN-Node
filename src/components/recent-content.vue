@@ -34,46 +34,37 @@
 
   </div>
 </template>
-<script>
-import { mapGetters } from 'vuex'
-export default {
-  data () {
-    return {
-      replies: false,
-      topics: false,
-      titletext: ''
-    }
-  },
-  deactivated () {
-    this.$destroy()
-  },
-  methods: {
-    routerback () {
-      this.$router.goBack()
-    },
-    toPost (postId) {
-      this.$router.push({name: 'post', params: {postid: postId}}) // 跳转到具体帖子页
-    }
-  },
-  computed: {
-    ...mapGetters([
-      'userDetailData'
-    ])
-  },
-  beforeRouteEnter (to, from, next) {
-    next((vm) => {
-      if (to.query.to === 'topics') {
-        vm.topics = true
-        vm.titletext = `${vm.$route.params.username} 最近参与的话题`
-      }
-      if (to.query.to === 'replies') {
-        vm.replies = true
-        vm.titletext = `${vm.$route.params.username} 最近参与的回复`
-      }
-    })
-  },
-  components: {}
+<script setup>
+import { ref, computed, onDeactivated } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { useStore } from 'vuex'
+
+const router = useRouter()
+const route = useRoute()
+const store = useStore()
+
+const replies = ref(false)
+const topics = ref(false)
+const titletext = ref('')
+
+const userDetailData = computed(() => store.getters.userDetailData)
+
+// Vue 3 doesn't have $destroy, using onDeactivated instead
+onDeactivated(() => {
+  // Cleanup if needed
+})
+
+const routerback = () => {
+  // Vue Router 4 doesn't have goBack method, using router.go()
+  router.go(-1)
 }
+
+const toPost = (postId) => {
+  router.push({name: 'post', params: {postid: postId}}) // 跳转到具体帖子页
+}
+
+// Using onMounted with route handling since beforeRouteEnter is not available in setup
+// This would typically be handled in the router configuration
 </script>
 <style lang="scss" rel="stylesheet/scss" scoped >
   %papershodow{

@@ -40,63 +40,59 @@
       </div>
     </div>
 </template>
-<script>
-import { mapGetters } from 'vuex'
-export default {
-  name: 'login',
-  data () {
-    return {
-      userid: null,
-      isNoContent: true,
-      username: this.$route.params.username
-      // isRecent: false
-    }
-  },
-  methods: {
-    routerback () {
-      this.$router.goBack()
-    },
-    torecent (p) {
-      this.$router.push(
-        {
-          name: 'recent',
-          params: {
-            username: this.$route.params.username
-          },
-          query: {
-            to: p
-          }
-        })
-      //  this.isRecent = true
-    }
-  },
-  beforeRouteEnter (to, from, next) {
-    next((vm) => {
-      if (to.params.username === 'defult') {
-        vm.isNoContent = true
-        return
-      }
-      if (to.params.username === vm.$route.params.username) {
-        vm.$store.dispatch('getUserDetail', {username: vm.$route.params.username})
-        vm.isNoContent = false
-        return
-      }
-      if (from.path === '/') {
-        vm.isLogin ? vm.$store.dispatch('getUserDetail', {username: vm.userName}) : vm.$store.dispatch('getUserDetail', {username: vm.$route.params.username})
-        vm.isNoContent = false
-        return
+<script setup>
+import { ref, computed, onMounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { useStore } from 'vuex'
+
+const router = useRouter()
+const route = useRoute()
+const store = useStore()
+
+const userid = ref(null)
+const isNoContent = ref(true)
+const username = ref(route.params.username)
+
+const userDetailData = computed(() => store.getters.userDetailData)
+const isLogin = computed(() => store.getters.isLogin)
+const userName = computed(() => store.getters.userName)
+const userUrl = computed(() => store.getters.userUrl)
+
+// Using onMounted with route handling since beforeRouteEnter is not available in setup
+onMounted(() => {
+  if (route.params.username === 'defult') {
+    isNoContent.value = true
+    return
+  }
+  if (route.params.username === route.params.username) {
+    store.dispatch('getUserDetail', {username: route.params.username})
+    isNoContent.value = false
+    return
+  }
+  if (route.query.from === '/') {
+    isLogin.value ? store.dispatch('getUserDetail', {username: userName.value}) : store.dispatch('getUserDetail', {username: route.params.username})
+    isNoContent.value = false
+    return
+  }
+})
+
+const routerback = () => {
+  // Vue Router 4 doesn't have goBack method, using router.go()
+  router.go(-1)
+}
+
+const torecent = (p) => {
+  router.push(
+    {
+      name: 'recent',
+      params: {
+        username: route.params.username
+      },
+      query: {
+        to: p
       }
     })
-  },
-  computed: {
-    ...mapGetters([
-      'userDetailData',
-      'isLogin',
-      'userName',
-      'userUrl'
-    ])
-  },
-  components: {}
+  //  this.isRecent = true
 }
 </script>
 <style lang="scss" rel="stylesheet/scss" scoped >

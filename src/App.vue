@@ -1,23 +1,19 @@
 <template>
   <div id="app">
-    <transition :name="transitionName">
-      <keep-alive>
-        <router-view class="view"></router-view>
-      </keep-alive>
-    </transition>
+    <router-view class="view"></router-view>
   </div>
 </template>
+
 <script>
-import notice from './components/notice.vue'
-import slide from './components/slide.vue'
 export default {
-  data () {
+  name: 'App',
+  data() {
     return {
       transitionName: ''
     }
   },
   watch: {
-    '$route' (to, from) {
+    '$route'(to, from) {
       let isBack = this.$router.isBack
       if (isBack) {
         this.transitionName = 'slide-right'
@@ -26,13 +22,10 @@ export default {
       }
       this.$router.isBack = false
     }
-  },
-  components: {
-    notice,
-    slide
   }
 }
 </script>
+
 <style>
   .view {
     position: absolute;

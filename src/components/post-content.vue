@@ -89,123 +89,127 @@
        </div>
   </div>
 </template>
-<script>
-import { mapGetters } from 'vuex'
+<script setup>
+import { ref, computed, onMounted, onDeactivated } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { useStore } from 'vuex'
 import loading from './loading.vue'
-export default {
-  data () {
-    return {
-      replyname: '',
-      replyid: '',
-      replycontent: '',
-      postid: this.$route.params.postid
-    }
-  },
-  deactivated () {
-    this.$destroy()
-  },
-  created () {
-    this.$store.dispatch('loadingPost')
-    this.$store.dispatch({
-      type: 'getPostData',
-      postid: this.$route.params.postid,
-      token: this.userToken,
-      data: []
-    })
-    window.scrollTo(0, 0)
-  },
-  methods: {
-    routerback () {
-      this.$router.goBack()
-    },
-    replyat (id, name) {
-      if (id === 0 && name === 0) {
-        this.replyname = ''
-        this.replyid = ''
-      } else {
-        this.replyid = id
-        this.replyname = `@${name}`
-      }
-    },
-    postreply () {
-      if (this.isLogin) {
-        if (this.replycontent) {
-          this.$store.dispatch('postReply', {
-            postId: this.postid,
-            content: this.replycontent,
-            replyId: this.replyid,
-            token: this.userToken,
-            replyName: this.replyname
-          })
-          /* let reply = async () => {
-            try {
-              await this.$store.dispatch('postReply', {
-                postId: this.postid,
-                content: this.replycontent,
-                replyId: this.replyid,
-                token: this.userToken,
-                replyName: this.replyname
-              })
-              await this.$store.dispatch({
-                type: 'getPostData',
-                postid: this.$route.params.postid,
-                token: this.userToken,
-                data: []
-              })
-            } catch (err) {
-              alert(err.response.data['error_msg'])
-            }
-          }
-          reply() */ // es7 async
-        } else { alert('不能回复空内容') }
-      } else { alert('请登录后再进行回复') }
-    },
-    postcollection () {
-      if (this.isLogin) {
-        this.$store.dispatch('postCollection', {
-          collect: this.isCollection,
-          token: this.userToken,
-          postid: this.postid
-        })
-      } else {
-        alert('请登录后再收藏帖子')
-      }
-    },
-    postups (id, index) {
-      if (this.isLogin) {
-        this.$store.dispatch('postUps', {
-          token: this.userToken,
-          replyId: id,
-          index: index
-        })
-      } else {
-        alert('请登录后再点赞')
-      }
-    },
-    toUserInfo (name) {
-      this.$router.push({name: 'userdetail', params: {username: name}})
-    },
-    toEditPost (postid) {
-      this.$router.push({name: 'editpost', params: {username: postid}})
-    }
-  },
-  computed: {
-    ...mapGetters([
-      'postData',
-      'loadingPostStatus',
-      'userId',
-      'userToken',
-      'isLogin',
-      'isCollection'
-    ])
-  },
-  beforeRouteEnter (to, from, next) {
-    next((vm) => {
-    })
-  },
-  components: {
-    loading
+
+const router = useRouter()
+const route = useRoute()
+const store = useStore()
+
+const replyname = ref('')
+const replyid = ref('')
+const replycontent = ref('')
+const postid = ref(route.params.postid)
+
+const postData = computed(() => store.getters.postData)
+const loadingPostStatus = computed(() => store.getters.loadingPostStatus)
+const userId = computed(() => store.getters.userId)
+const userToken = computed(() => store.getters.userToken)
+const isLogin = computed(() => store.getters.isLogin)
+const isCollection = computed(() => store.getters.isCollection)
+
+onMounted(() => {
+  store.dispatch('loadingPost')
+  store.dispatch({
+    type: 'getPostData',
+    postid: route.params.postid,
+    token: userToken.value,
+    data: []
+  })
+  window.scrollTo(0, 0)
+})
+
+// Vue 3 doesn't have $destroy, using onDeactivated instead
+onDeactivated(() => {
+  // Cleanup if needed
+})
+
+const routerback = () => {
+  // Vue Router 4 doesn't have goBack method, using router.go()
+  router.go(-1)
+}
+
+const replyat = (id, name) => {
+  if (id === 0 && name === 0) {
+    replyname.value = ''
+    replyid.value = ''
+  } else {
+    replyid.value = id
+    replyname.value = `@${name}`
   }
+}
+
+const postreply = () => {
+  if (isLogin.value) {
+    if (replycontent.value) {
+      store.dispatch('postReply', {
+        postId: postid.value,
+        content: replycontent.value,
+        replyId: replyid.value,
+        token: userToken.value,
+        replyName: replyname.value
+      })
+      /* let reply = async () => {
+        try {
+          await store.dispatch('postReply', {
+            postId: postid.value,
+            content: replycontent.value,
+            replyId: replyid.value,
+            token: userToken.value,
+            replyName: replyname.value
+          })
+          await store.dispatch({
+            type: 'getPostData',
+            postid: route.params.postid,
+            token: userToken.value,
+            data: []
+          })
+        } catch (err) {
+          alert(err.response.data['error_msg'])
+        }
+      }
+      reply() */ // es7 async
+    } else { 
+      alert('不能回复空内容') 
+    }
+  } else { 
+    alert('请登录后再进行回复') 
+  }
+}
+
+const postcollection = () => {
+  if (isLogin.value) {
+    store.dispatch('postCollection', {
+      collect: isCollection.value,
+      token: userToken.value,
+      postid: postid.value
+    })
+  } else {
+    alert('请登录后再收藏帖子')
+  }
+}
+
+const postups = (id, index) => {
+  if (isLogin.value) {
+    store.dispatch('postUps', {
+      token: userToken.value,
+      replyId: id,
+      index: index
+    })
+  } else {
+    alert('请登录后再点赞')
+  }
+}
+
+const toUserInfo = (name) => {
+  router.push({name: 'userdetail', params: {username: name}})
+}
+
+const toEditPost = (postid) => {
+  router.push({name: 'editpost', params: {username: postid}})
 }
 </script>
 <style lang="scss" rel="stylesheet/scss">

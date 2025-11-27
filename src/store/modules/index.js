@@ -1,10 +1,8 @@
 import * as types from './index-mutation-types'
-import Vue from 'vue'
 import axios from 'axios'
-import VueAxios from 'vue-axios'
 import moment from 'moment'
 moment.locale('zh-cn')
-Vue.use(VueAxios, axios)
+
 const state = {
   indexdata: [],
   loadingstatus: true,
@@ -87,6 +85,7 @@ const actions = {
   }
 }
 export default {
+  namespaced: true,
   state,
   getters,
   mutations,
