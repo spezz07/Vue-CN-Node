@@ -5,12 +5,12 @@
       <mu-icon-button icon="arrow_back"  @click="routerback" slot="left"/>
     </mu-appbar>
   </div>
-        <div  v-if="isLogin" class="collection-content" v-for="i in collectData" >
+        <div  v-if="isLogin" class="collection-content" v-for="i in collectData" :key="i.id">
         <div class="collection-content-item">
           <div class="item-left" @click="toPost(i.id)">
             <span class="item-title" v-if="i.good" style="color: #81c784">{{i.title}}</span>
             <span class="item-title" v-else-if="i.top" style="color: #1d7ac6">{{i.title}}</span>
-            <span class="item-title" v-else="i.top" >{{i.title}}</span>
+            <span class="item-title" v-else>{{i.title}}</span>
             <span class="item-lastreply">最后回复时间:{{i.last_reply_at}}</span>
           </div>
        <div class="item-right">
@@ -25,37 +25,35 @@
     </div>
   </div>
 </template>
-<script>
-import { mapGetters } from 'vuex'
-export default {
-  name: 'collection',
-  data () {
-    return {
-    }
-  },
-  deactivated () {
-    this.$destroy()
-  },
-  created () {
-    if (this.isLogin) {
-      this.$store.dispatch('getMyCollect', {})
-    }
-  },
-  methods: {
-    routerback () {
-      this.$router.goBack()
-    },
-    toPost (postId) {
-      this.$router.push({name: 'post', params: {postid: postId}}) // 跳转到具体帖子页
-    }
-  },
-  computed: {
-    ...mapGetters([
-      'isLogin',
-      'collectData'
-    ])
-  },
-  components: {}
+<script setup>
+import { computed, onMounted, onDeactivated } from 'vue'
+import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
+
+const router = useRouter()
+const store = useStore()
+
+const isLogin = computed(() => store.getters.isLogin)
+const collectData = computed(() => store.getters.collectData)
+
+onMounted(() => {
+  if (isLogin.value) {
+    store.dispatch('getMyCollect', {})
+  }
+})
+
+// Vue 3 doesn't have $destroy, using onDeactivated instead
+onDeactivated(() => {
+  // Cleanup if needed
+})
+
+const routerback = () => {
+  // Vue Router 4 doesn't have goBack method, using router.go()
+  router.go(-1)
+}
+
+const toPost = (postId) => {
+  router.push({name: 'post', params: {postid: postId}}) // 跳转到具体帖子页
 }
 </script>
 <style lang="scss" rel="stylesheet/scss" scoped >

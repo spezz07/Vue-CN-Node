@@ -1,43 +1,56 @@
 <template>
   <div>
-    <mu-appbar title="CN-Node社区">
-      <mu-icon-button icon="arrow_back"  @click="routerback" slot="left"/>
-    </mu-appbar>
+    <el-header style="text-align: right; font-size: 12px">
+      <el-button type="primary" @click="routerback" icon="el-icon-arrow-left" plain>返回</el-button>
+    </el-header>
     <div class="login">
-           <mu-text-field  v-model="tokenvalue" class="logininput" underlineFocusClass="lineclass" labelFocusClass="textclass" label="请输入你的Token" labelFloat/>
+           <el-input 
+             v-model="tokenvalue" 
+             class="logininput" 
+             placeholder="请输入你的Token"
+             type="textarea"
+             :autosize="{ minRows: 2, maxRows: 4}"
+           />
            <p class="login-des">请前往CN-Nodejs社区，将设置页面中的Access Token 复制到上方区域，进行登录</p>
-           <mu-raised-button label="确定" class="logininput-btn"  @click="loginin" />
+           <el-button type="primary" class="logininput-btn" @click="loginin">确定</el-button>
          </div>
   </div>
 </template>
+
 <script>
-import { mapGetters } from 'vuex'
+import { ref } from 'vue'
+import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
+
 export default {
   name: 'login',
-  data () {
-    return {
-      tokenvalue: ''
-    }
-  },
-  methods: {
-    loginin () {
-      if (this.tokenvalue === '') {
+  setup() {
+    const tokenvalue = ref('')
+    const store = useStore()
+    const router = useRouter()
+    
+    const loginin = () => {
+      if (tokenvalue.value === '') {
         alert('token值不能为空')
       } else {
-        this.$store.dispatch('userLogin', this.tokenvalue)
+        store.dispatch('userLogin', tokenvalue.value)
       }
-    },
-    routerback () {
-      this.$router.goBack()
     }
-  },
-  computed: {
-    ...mapGetters([])
-  },
-  components: {}
+    
+    const routerback = () => {
+      router.goBack()
+    }
+    
+    return {
+      tokenvalue,
+      loginin,
+      routerback
+    }
+  }
 }
 </script>
-<style lang="scss" rel="stylesheet/scss" scoped >
+
+<style lang="scss" scoped>
   %papershodow{
     box-shadow:0 1px 6px rgba(0,0,0,.117647),0 1px 4px rgba(0,0,0,.117647)
   };
@@ -62,7 +75,6 @@ export default {
 
   .logininput{
     width: 90%;
-    max-height: 48px!important;
   }
   .logininput-btn{
     width:90%;

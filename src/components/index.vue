@@ -60,106 +60,95 @@
     </div>
   </div>
 </template>
-<script>
-import { mapGetters } from 'vuex'
+<script setup>
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
+import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 import loading from './loading.vue'
 import slide from './slide.vue'
-export default {
-  created () {
-    this.$store.dispatch({
-      type: 'getIndexData',
-      activeTab: this.activetab,
+
+const router = useRouter()
+const store = useStore()
+
+const activetab = ref('all')
+const page = ref(1)
+const slideshow = ref(false)
+
+const indexData = computed(() => store.getters.indexData)
+const loadingIndexStatus = computed(() => store.getters.loadingIndexStatus)
+const loadingmoreStatus = computed(() => store.getters.loadingmoreStatus)
+const leavePagey = computed(() => store.getters.leavePagey)
+const isLogin = computed(() => store.getters.isLogin)
+const userToken = computed(() => store.getters.userToken)
+const noReadNum = computed(() => store.getters.noReadNum)
+
+onMounted(() => {
+  store.dispatch({
+    type: 'getIndexData',
+    activeTab: activetab.value,
+    val: []
+  })
+  if (isLogin.value) {
+    store.dispatch('getNoReadNum', { token: userToken.value })
+  }
+  
+  // Add scroll event listener after a delay
+  setTimeout(() => {
+    window.addEventListener('scroll', loadmoredata)
+  }, 100)
+})
+
+onBeforeUnmount(() => {
+  store.dispatch('setPagey', window.pageYOffset)
+  window.removeEventListener('scroll', loadmoredata) // 当转移到其他路由时，移除scroll事件
+})
+
+const handleslideshow = () => {
+  slideshow.value = !slideshow.value
+}
+
+const handleTabChange = (val) => { // 切换tab进行数据请求
+  window.scrollTo(0, 0)
+  page.value = 1
+  activetab.value = val
+  store.dispatch('loadingIndex')
+  store.dispatch({
+    type: 'getIndexData',
+    activeTab: activetab.value,
+    val: []
+  })
+}
+
+const toPost = (postId) => {
+  router.push({name: 'post', params: {postid: postId}}) // 跳转到具体帖子页
+}
+
+const toNewPost = () => {
+  if (isLogin.value) {
+    router.push('/newpost') // 跳转到新建帖子
+  } else {
+    alert('请登录后再进行新建帖子操作')
+  }
+}
+
+const toMyMessage = () => {
+  router.push(`/mymessage`)
+}
+
+const loadmoredata = () => {
+  // console.info('文档高度：' + document.querySelector('.content').offsetHeight)
+  // console.info('滚动高度：' + pageYOffset)
+  // console.info('相减：' + (document.querySelector('.content').offsetHeight - window.pageYOffset))
+  // console.info('页面高度:' + window.screen.height)
+  if (!loadingmoreStatus.value && document.querySelector('.content').offsetHeight - window.pageYOffset <= window.screen.height) { // 判断是否滚动到底部，并且没在载入状态下才进行请求数据
+    page.value++
+    store.dispatch('loadingMoreIndex')
+    store.dispatch({
+      type: 'getIndexMoreData',
+      activeTab: activetab.value,
+      pageCount: page.value,
       val: []
     })
-    if (this.isLogin) {
-      this.$store.dispatch('getNoReadNum', { token: this.userToken })
-    }
-  },
-  data () {
-    return {
-      activetab: 'all',
-      page: 1,
-      slideshow: false
-    }
-  },
-  methods: {
-    handleslideshow () {
-      this.slideshow = !this.slideshow
-    },
-    handleTabChange (val) { // 切换tab进行数据请求
-      window.scrollTo(0, 0)
-      this.page = 1
-      this.activetab = val
-      this.$store.dispatch('loadingIndex')
-      this.$store.dispatch({
-        type: 'getIndexData',
-        activeTab: this.activetab,
-        val: []
-      })
-    },
-    toPost (postId) {
-      this.$router.push({name: 'post', params: {postid: postId}}) // 跳转到具体帖子页
-    },
-    toNewPost () {
-      if (this.isLogin) {
-        this.$router.push('/newpost') // 跳转到新建帖子
-      } else {
-        alert('请登录后再进行新建帖子操作')
-      }
-    },
-    toMyMessage () {
-      this.$router.push(`/mymessage`)
-    },
-    loadmoredata () {
-      // console.info('文档高度：' + document.querySelector('.content').offsetHeight)
-      // console.info('滚动高度：' + pageYOffset)
-      // console.info('相减：' + (document.querySelector('.content').offsetHeight - window.pageYOffset))
-      // console.info('页面高度:' + window.screen.height)
-      if (!this.loadingmoreStatus && document.querySelector('.content').offsetHeight - window.pageYOffset <= window.screen.height) { // 判断是否滚动到底部，并且没在载入状态下才进行请求数据
-        this.page++
-        this.$store.dispatch('loadingMoreIndex')
-        this.$store.dispatch({
-          type: 'getIndexMoreData',
-          activeTab: this.activetab,
-          pageCount: this.page,
-          val: []
-        })
-      }
-    }
-  },
-  computed: {
-    ...mapGetters([
-      'indexData',
-      'loadingIndexStatus', // getters 映射到this.indexData注意命名不能冲突
-      'loadingmoreStatus',
-      'leavePagey',
-      'isLogin',
-      'userToken',
-      'noReadNum'
-    ])
-  },
-  beforeRouteEnter (to, from, next) {
-    if (from.path === '/login') {
-      location.replace(document.referrer) // window.location.reload()
-    }
-    next((vm) => {
-      window.scrollTo(0, vm.leavePagey)
-      if (vm.isLogin) {
-        vm.$store.dispatch('getNoReadNum', { token: vm.userToken })
-      }
-      setTimeout(() => {
-        window.addEventListener('scroll', vm.loadmoredata)
-      }, 100)
-    })
-  },
-  beforeRouteLeave (to, from, next) {
-    this.$store.dispatch('setPagey', window.pageYOffset)
-    window.removeEventListener('scroll', this.loadmoredata) // 当转移到其他路由时，移除scroll事件
-    next()
-  },
-  components: {
-    loading,
-    slide
   }
 }
 </script>

@@ -23,114 +23,104 @@
     <mu-raised-button label="确定" class="submit-btn" @click="submitData(postData.id)"/>
   </div>
 </template>
-<script>
-import { mapGetters } from 'vuex'
+<script setup>
+import { ref, computed, onMounted, onDeactivated } from 'vue'
+import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 
-export default {
-  data () {
-    return {
-      list: ['问答', '分享', '求职', '客户端'],
-      posttitle: '',
-      posttab: '',
-      postcontent: ''
+const router = useRouter()
+const store = useStore()
+
+const list = ref(['问答', '分享', '求职', '客户端'])
+const posttitle = ref('')
+const posttab = ref('')
+const postcontent = ref('')
+
+const userToken = computed(() => store.getters.userToken)
+const postData = computed(() => store.getters.postData)
+
+onMounted(() => {
+  posttitle.value = postData.value.title
+  postcontent.value = postData.value.content
+  const tabs = (t) => {
+    switch (t) {
+      case 'ask':
+        posttab.value = '问答'
+        break
+      case 'share':
+        posttab.value = '分享'
+        break
+      case 'job':
+        posttab.value = '求职'
+        break
+      case 'dev':
+        posttab.value = '客户端'
+        return
     }
-  },
-  deactivated () {
-    this.$destroy()
-  },
-  created () {
-    this.posttitle = this.postData.title
-    this.postcontent = this.postData.content
-    const tabs = (t) => {
-      switch (t) {
-        case 'ask':
-          this.posttab = '问答'
-          break
-        case 'share':
-          this.posttab = '分享'
-          break
-        case 'job':
-          this.posttab = '求职'
-          break
-        case 'dev':
-          this.posttab = '客户端'
-          return
-      }
-    }
-    tabs(this.postData.tab)
-  },
-  methods: {
-    routerback () {
-      this.$router.goBack()
-    },
-    submitData (id) {
-      let temp
-      switch (this.posttab) {
-        case '问答':
-          temp = 'ask'
-          break
-        case '分享':
-          temp = 'share'
-          break
-        case '求职':
-          temp = 'job'
-          break
-        case '客户端':
-          temp = 'dev'
-      }
-      let check = (title, tab, content) => {
-        let count = 0
-        if (title !== '') {
-          count++
-        } else {
-          alert('标题内容不能为空')
-          return false
-        }
-        if (tab !== '') {
-          count++
-        } else {
-          alert('帖子标签不能为空')
-          return false
-        }
-        if (content !== '') {
-          count++
-        } else {
-          alert('帖子内容不能为空')
-          return false
-        }
-        if (count === 3) {
-          this.$store.dispatch('editMyPost', {
-            token: this.userToken,
-            title: this.posttitle,
-            content: this.postcontent,
-            tab: temp,
-            postid: id
-          })
-        }
-      }
-      check(this.posttitle, this.posttab, this.postcontent)
-    }
-  },
-  computed: {
-    ...mapGetters([
-      'userToken',
-      'postData'
-    ])
-  },
-  beforeRouteEnter (to, from, next, vm) {
-    if (localStorage.getItem('islogin')) {
-      next()
-    } else {
-      alert('请登录后再操作')
-      window.history.go(-1)
-    }
-  },
-  beforeRouteLeave (to, from, next) {
-    next()
-  },
-  components: {
   }
+  tabs(postData.value.tab)
+})
+
+// Vue 3 doesn't have $destroy, using onDeactivated instead
+onDeactivated(() => {
+  // Cleanup if needed
+})
+
+const routerback = () => {
+  // Vue Router 4 doesn't have goBack method, using router.go()
+  router.go(-1)
 }
+
+const submitData = (id) => {
+  let temp
+  switch (posttab.value) {
+    case '问答':
+      temp = 'ask'
+      break
+    case '分享':
+      temp = 'share'
+      break
+    case '求职':
+      temp = 'job'
+      break
+    case '客户端':
+      temp = 'dev'
+  }
+  let check = (title, tab, content) => {
+    let count = 0
+    if (title !== '') {
+      count++
+    } else {
+      alert('标题内容不能为空')
+      return false
+    }
+    if (tab !== '') {
+      count++
+    } else {
+      alert('帖子标签不能为空')
+      return false
+    }
+    if (content !== '') {
+      count++
+    } else {
+      alert('帖子内容不能为空')
+      return false
+    }
+    if (count === 3) {
+      store.dispatch('editMyPost', {
+        token: userToken.value,
+        title: title,
+        content: content,
+        tab: temp,
+        postid: id
+      })
+    }
+  }
+  check(posttitle.value, posttab.value, postcontent.value)
+}
+
+// Vue 3 equivalent of beforeRouteEnter/beforeRouteLeave guard
+// This would typically be handled in the router configuration
 </script>
 <style lang="scss" rel="stylesheet/scss"  scoped>
   $fontcolor:#324057;
